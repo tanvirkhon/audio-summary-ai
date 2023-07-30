@@ -51,3 +51,52 @@ def key_points_extraction(transcription):
         ]
     )
     return response["choices"][0]["message"]["content"]
+
+# Action Items Extraction Function
+def action_item_extraction(transcription):
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        temperature=0,
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an AI expert in analyzing conversations and extracting action items. Please review the text and identify any tasks, assignments, or actions that were agreed upon or mentioned as needing to be done. These could be tasks assigned to specific individuals, or general actions that the group has decided to take. Please list these action items clearly and concisely.",
+            },
+            {
+                "role": "user",
+                "content": transcription
+            }
+        ]
+    )
+    return response["choices"][0]["message"]["content"]
+
+# Sentiment Analysis Function
+def sentiment_analysis(transcription):
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        temperature=0,
+        messages=[
+            {
+                "role": "system",
+                "content": "As an AI with expertise in language and emotion analysis, your task is to analyze the sentiment of the following text. Please consider the overall tone of the discussion, the emotion conveyed by the language used, and the context in which words and phrases are used. Indicate whether the sentiment is generally positive, negative, or neutral, and provide brief explanations for your analysis where possible.",
+            },
+            {
+                "role": "user",
+                "content": transcription
+            }
+        ]
+    )
+    return response["choices"][0]["message"]["content"]
+
+# Meeting Minutes Function
+def meeting_minutes(transcription):
+    abstract_summary = abstract_summary_extraction(transcription)
+    key_points = key_points_extraction(transcription)
+    action_items = action_item_extraction(transcription)
+    sentiment = sentiment_analysis(transcription)
+    return {
+        "abstract_summary": abstract_summary,
+        "key_points": key_points,
+        "action_items": action_items,
+        "sentiment": sentiment,
+    }
